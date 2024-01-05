@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./db/conn.js";
 import { userRouter } from "./routes/userRoutes.js";
+import { todoRouter } from "./routes/todoRoutes.js";
 
 const app = express();
 
@@ -10,8 +11,9 @@ app.use(express.static("public"));
 
 //routes
 app.use("/", userRouter);
+app.use("/", todoRouter);
 try {
-  connectDb();
+  await connectDb();
 } catch (error) {
   console.log(err);
 }

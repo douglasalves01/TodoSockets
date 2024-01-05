@@ -56,4 +56,39 @@ export class UserController {
       res.status(500).json({ message: error });
     }
   }
+  static async login(req, res) {
+    const { email, password } = req.body;
+
+    if (!email) {
+      res.status(422).json({ message: "O email é obrigatório" });
+      return;
+    }
+    if (!password) {
+      res.status(422).json({ message: "A senha é obrigatória" });
+      return;
+    }
+    //checar se o usuário já existe
+    const sql = "SELECT * FROM users WHERE email = $1"; // Utilizando um placeholder ($1) para o email
+    const userExists = await conn.query(sql, [email]); // Passando o email como um parâmetro
+    if (userExists.rows.length === 0) {
+      res.status(422).json({ message: "Por favor, utilize outro email!" });
+      return;
+    }
+
+    //checar senha inserida com senha do banco(hash)
+    const checkPassword = await bcrypt.compare(
+      password,
+      userExists.rows[0].password
+    );
+    if (!checkPassword) {
+      res.status(422).json({ message: "Senha inválida" });
+      return;
+    }
+    await createUserToken(
+      userExists.rows[0].name,
+      userExists.rows[0].id,
+      req,
+      res
+    );
+  }
 }
