@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDb } from "./db/conn.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { todoRouter } from "./routes/todoRoutes.js";
+import { listRouter } from "./routes/listRoutes.js";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.static("public"));
 //routes
 app.use("/", userRouter);
 app.use("/", todoRouter);
+app.use("/", listRouter);
 try {
   await connectDb();
 } catch (error) {
