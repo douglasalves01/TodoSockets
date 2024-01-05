@@ -32,7 +32,6 @@ export class TodoController {
       }
       idMember.push(memberExists.rows[0].id);
     }
-    console.log(idMember);
     const token = await getToken(req);
     const user = await getUserByToken(token);
 
@@ -47,16 +46,43 @@ export class TodoController {
   }
   static async updateTodo(req, res) {
     const id = req.params.id;
-    const { title, description, status, idMemeber } = req.body;
+    const { title, description, status } = req.body;
 
     //verificar se existe o todo
     const sqlTodo = "select * from todo where id=$1";
     const todoExists = await conn.query(sqlTodo, [id]);
-    if (todoExists.rows[0].length === 0) {
+
+    if (todoExists.rows.length === 0) {
       res.status(422).jso({ message: "Nota não foi encontrada!" });
     }
+    //resgatando dados do usuario logado
+    const token = await getToken(req);
+    const user = await getUserByToken(token);
 
-    //verificar se a todo a ser
+    //verificar se a todo a ser atualizado tem como idUser ou idMember o usuario logado
+    const sqlUser =
+      "SELECT * FROM todo WHERE id = $1 AND ($2 = iduser OR $2 = ANY(idmember))";
+    try {
+      const userContentTodo = await conn.query(sqlUser, [id, user.id]);
+      if (userContentTodo.rows.length === 0) {
+        res.status(422).json({
+          message:
+            "Houve um problema na atualização da nota! Tente novamente mais tarde!",
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+    const updateSql =
+      "update todo set title=$1, description=$2, status = $3 where id= $4";
+    const updateData = [title, description, status, id];
+    try {
+      await conn.query(updateSql, updateData);
+      res.status(200).json({ message: "Nota atualizada com sucesso!" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
   static async removeTodoById(req, res) {}
 }
