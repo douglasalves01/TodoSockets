@@ -10,4 +10,8 @@
       <input type="password" name="password" id="password" />
     </fieldset>
   </form>
+  <p>
+    Não tem uma conta ainda?
+    <router-link to="/register">Clique aqui!</router-link>
+  </p>
 </template>
