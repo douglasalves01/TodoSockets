@@ -34,7 +34,7 @@ export class LisController {
     const sqlData = [description, idmember, title, user.id];
     try {
       await conn.query(sqllist, sqlData);
-      res.status(200).json({ message: "Lista cadastrado com sucesso!" });
+      res.status(200).json({ message: "Lista cadastrada com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
