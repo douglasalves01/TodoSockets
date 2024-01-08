@@ -4,9 +4,10 @@ import { connectDb } from "./db/conn.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { todoRouter } from "./routes/todoRoutes.js";
 import { listRouter } from "./routes/listRoutes.js";
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 

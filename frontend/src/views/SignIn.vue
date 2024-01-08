@@ -3,14 +3,19 @@
     <div class="content-image">Teste imagem login</div>
     <div class="content-form">
       <h2>Login</h2>
-      <form action="" method="post">
+      <form v-on:submit.prevent="handleSubmitForm()" action="" method="post">
         <fieldset>
           <label for="email">Email</label>
-          <input type="email" name="email" id="email" />
+          <input type="email" name="email" id="email" v-model="dados.email" />
         </fieldset>
         <fieldset>
           <label for="password">Senha</label>
-          <input type="password" name="password" id="password" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            v-model="dados.password"
+          />
         </fieldset>
         <input type="submit" value="Login" />
       </form>
@@ -21,6 +26,36 @@
     </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+export default {
+  data() {
+    return {
+      dados: {
+        email: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    handleSubmitForm() {
+      axios
+        .post("http:localhost:5000/users/login", this.dados)
+        .then((response) => {
+          if (response.status === 200) {
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+          }
+        })
+        .catch((error) => {
+          const message = error.response.data.message;
+          console.log(message);
+        });
+    },
+  },
+};
+</script>
 
 <style lang="css" scoped>
 fieldset {

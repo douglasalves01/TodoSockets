@@ -24,7 +24,7 @@
         <div class="form-group">
           <label for="confirmPassword">Confirmação de senha</label>
           <input
-            type="confirmPassword"
+            type="password"
             name="confirmPassword"
             id="confirmPassword"
             v-model="dados.confirmPassword"
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -53,7 +55,22 @@ export default {
     };
   },
   methods: {
-    handleSubmitForm() {},
+    handleSubmitForm() {
+      axios
+        .post("http://localhost:5000/users/register", this.dados)
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+            // Redireciona ou executa outras ações após o registro bem-sucedido
+          }
+        })
+        .catch((error) => {
+          const message = error.response.data.message;
+          console.log(message);
+        });
+    },
   },
 };
 </script>
