@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="content-image">Teste imagem login</div>
+    <div class="content-image">
+      <ImageSection />
+    </div>
     <div class="content-form">
       <h2>Login</h2>
       <form v-on:submit.prevent="handleSubmitForm()" action="" method="post">
@@ -28,6 +30,8 @@
 </template>
 
 <script>
+import ImageSection from "../components/ImageSection.vue";
+import router from "../router/router.js";
 import axios from "axios";
 export default {
   data() {
@@ -41,11 +45,12 @@ export default {
   methods: {
     handleSubmitForm() {
       axios
-        .post("http:localhost:5000/users/login", this.dados)
+        .post("http://localhost:5000/users/login", this.dados)
         .then((response) => {
           if (response.status === 200) {
             const token = response.data.token;
             localStorage.setItem("token", token);
+            router.push("/dashboard");
           }
         })
         .catch((error) => {
@@ -54,6 +59,7 @@ export default {
         });
     },
   },
+  components: { ImageSection },
 };
 </script>
 
@@ -95,5 +101,6 @@ form {
 .content-form input[type="submit"] {
   width: 100%;
   margin-bottom: 1rem;
+  background-color: #5ac7aa;
 }
 </style>

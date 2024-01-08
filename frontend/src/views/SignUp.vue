@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="content-image">teste imagem</div>
+    <div class="content-image">
+      <ImageSection />
+    </div>
     <div class="content-form">
       <h2>Create Account</h2>
       <form v-on:submit.prevent="handleSubmitForm()" action="" method="post">
@@ -41,8 +43,9 @@
 </template>
 
 <script>
+import ImageSection from "../components/ImageSection.vue";
 import axios from "axios";
-
+import router from "../router/router.js";
 export default {
   data() {
     return {
@@ -64,6 +67,7 @@ export default {
             const token = response.data.token;
             localStorage.setItem("token", token);
             // Redireciona ou executa outras ações após o registro bem-sucedido
+            router.push("/dashboard");
           }
         })
         .catch((error) => {
@@ -72,6 +76,7 @@ export default {
         });
     },
   },
+  components: { ImageSection },
 };
 </script>
 
