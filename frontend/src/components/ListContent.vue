@@ -11,13 +11,16 @@
         <ModalList v-if="mostrarModal" @fechar="fecharModal" />
       </div>
       <div class="list-data">
-        <p>title</p>
-        <p>description</p>
+        <div v-for="item in listaDeItens" :key="item.id">
+          <p>{{ item.title }}</p>
+          <p>{{ item.description }}</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import axios from "axios";
 import ModalList from "./ModalList.vue";
 export default {
   components: {
@@ -26,6 +29,7 @@ export default {
   data() {
     return {
       mostrarModal: false,
+      listaDeItens: [],
     };
   },
   methods: {
@@ -35,6 +39,28 @@ export default {
     fecharModal() {
       this.mostrarModal = false; // Fechar o modal quando o evento 'fechar' for emitido
     },
+    buscarListas() {
+      const token = localStorage.getItem("token");
+
+      // Configurar o token no cabeçalho 'Authorization'
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios
+        .get("http://localhost:5000/list")
+        .then((response) => {
+          if (response.status === 200) {
+            this.listaDeItens = response.data.data;
+            console.log(response.data.data);
+          }
+        })
+        .catch((error) => {
+          const message = error.response.data.message;
+          console.log(message);
+        });
+    },
+  },
+  mounted() {
+    this.buscarListas(); // Chame a função para buscar as listas quando o componente for montado
+    console.log(this.buscarListas());
   },
 };
 </script>

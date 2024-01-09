@@ -39,4 +39,17 @@ export class LisController {
       res.status(500).json({ message: error.message });
     }
   }
+  static async getAllByUser(req, res) {
+    const token = await getToken(req);
+    const user = await getUserByToken(token);
+    const sqllist = "select * from list where iduser=$1";
+    const sqlData = [user.id];
+
+    try {
+      const data = await conn.query(sqllist, sqlData);
+      res.status(200).json({ message: "Busca concluída", data: data.rows });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 }
