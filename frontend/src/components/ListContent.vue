@@ -11,7 +11,13 @@
         <ModalList v-if="mostrarModal" @fechar="fecharModal" />
       </div>
       <div class="list-data">
-        <div v-for="item in listaDeItens" :key="item.id">
+        <div
+          class="list"
+          v-for="item in listaDeItens"
+          :key="item.id"
+          @click="selecionarItem(item)"
+          :class="{ selected: itemSelecionado === item }"
+        >
           <p>{{ item.title }}</p>
           <p>{{ item.description }}</p>
         </div>
@@ -30,6 +36,7 @@ export default {
     return {
       mostrarModal: false,
       listaDeItens: [],
+      itemSelecionado: null,
     };
   },
   methods: {
@@ -49,7 +56,6 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.listaDeItens = response.data.data;
-            console.log(response.data.data);
           }
         })
         .catch((error) => {
@@ -57,10 +63,16 @@ export default {
           console.log(message);
         });
     },
+    selecionarItem(item) {
+      if (this.itemSelecionado === item) {
+        this.itemSelecionado = null;
+      } else {
+        this.itemSelecionado = item;
+      }
+    },
   },
   mounted() {
-    this.buscarListas(); // Chame a função para buscar as listas quando o componente for montado
-    console.log(this.buscarListas());
+    this.buscarListas();
   },
 };
 </script>
@@ -69,24 +81,36 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 0.5rem 1rem;
 }
 .config-content {
+  width: 20%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-right: 1rem;
   border-right: 1px solid #000;
+  padding: 0.5rem 1rem;
 }
 .list-content {
-  width: 100%;
+  width: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding-left: 1rem;
 }
 .list-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+}
+.list-data {
+  width: 100%;
+  cursor: pointer;
+}
+
+.list {
+  padding: 0.5rem 1rem;
+}
+.list.selected {
+  background-color: #f0f0f0;
 }
 </style>
