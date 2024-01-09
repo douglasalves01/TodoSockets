@@ -2,13 +2,21 @@
   <div class="modal">
     <div class="modal-content">
       <div class="header-content">
-        <h2>To do</h2>
+        <h2>List</h2>
         <button @click="fecharModal">X</button>
       </div>
       <form action="" v-on:submit.prevent="handleSubmitForm()" method="post">
         <fieldset>
           <label for="title">Title</label>
           <input type="text" name="title" id="title" v-model="dados.title" />
+        </fieldset>
+        <fieldset>
+          <label for="status">Status</label>
+          <select id="status" name="status" v-model="dados.status">
+            <option value="to do">To do</option>
+            <option value="doing">Doing</option>
+            <option value="done">Done</option>
+          </select>
         </fieldset>
         <fieldset>
           <label for="description">Description</label>
@@ -33,6 +41,45 @@
     </div>
   </div>
 </template>
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      dados: {
+        title: "",
+        status: "",
+        description: "",
+        member: "",
+      },
+    };
+  },
+  methods: {
+    handleSubmitForm() {
+      const token = localStorage.getItem("token");
+
+      // Configurar o token no cabeçalho 'Authorization'
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios
+        .post("http://localhost:5000/todo/create", this.dados)
+        .then((response) => {
+          if (response.status === 200) {
+            const message = response.data.message;
+            console.log(message);
+          }
+        })
+        .catch((error) => {
+          const message = error.response.data.message;
+          console.log(message);
+        });
+    },
+    fecharModal() {
+      this.$emit("fechar"); // Emitir evento para fechar o modal
+    },
+  },
+};
+</script>
 <style scoped>
 .modal {
   position: fixed;
@@ -54,43 +101,3 @@
   border-radius: 4px;
 }
 </style>
-
-<script>
-import axios from "axios";
-
-export default {
-  data() {
-    return {
-      dados: {
-        title: "",
-        description: "",
-        member: "",
-      },
-    };
-  },
-  methods: {
-    fecharModal() {
-      this.$emit("fechar"); // Emitir evento para fechar o modal
-    },
-    handleSubmitForm() {
-      const token = localStorage.getItem("token");
-
-      // Configurar o token no cabeçalho 'Authorization'
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-      axios
-        .post("http://localhost:5000/list/create", this.dados)
-        .then((response) => {
-          if (response.status === 200) {
-            const message = response.data.message;
-            console.log(message);
-          }
-        })
-        .catch((error) => {
-          const message = error.response.data.message;
-          console.log(message);
-        });
-    },
-  },
-};
-</script>

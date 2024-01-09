@@ -4,9 +4,9 @@ import { getUserByToken } from "../helpers/get-user-by-token.js";
 
 export class TodoController {
   static async create(req, res) {
-    const { title, description, member } = req.body;
+    const { title, description, member, status } = req.body;
     let idMember = [];
-    const status = "to do";
+
     if (!title) {
       res.status(422).json({ message: "O título é obrigatório" });
       return;
@@ -39,7 +39,7 @@ export class TodoController {
     const todoData = [title, description, status, user.id, idMember];
     try {
       await conn.query(todoSql, todoData);
-      res.status(201).json({ message: "Notas cadastrada com sucesso!" });
+      res.status(200).json({ message: "Notas cadastrada com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -109,4 +109,19 @@ export class TodoController {
       res.status(422).json({ message: error.message });
     }
   }
+  static async getTodouserByTodo(req, res) {
+    const token = await getToken(req);
+    const user = await getUserByToken(token);
+    const sqllist = "select * from list where iduser=$1 and ";
+    const sqlData = [user.id];
+
+    try {
+      const data = await conn.query(sqllist, sqlData);
+      res.status(200).json({ message: "Busca concluída", data: data.rows });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  static async getTodouserByDoing(req, res) {}
+  static async getTodouserByDone(req, res) {}
 }

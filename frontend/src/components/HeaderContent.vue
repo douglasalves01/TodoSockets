@@ -3,7 +3,8 @@
     <h1>Homework</h1>
     <div class="options">
       <button>Deletar</button>
-      <button>+ Add To do</button>
+      <button @click="abrirModal()">adicionar</button>
+      <ModalList v-if="mostrarModal" @fechar="fecharModal" />
       <button>+ Invite people</button>
     </div>
   </div>
@@ -26,3 +27,27 @@
   opacity: 0.8;
 }
 </style>
+<script>
+import axios from "axios";
+import ModalList from "./ModalTodo.vue";
+export default {
+  components: {
+    ModalList,
+  },
+  data() {
+    return {
+      mostrarModal: false,
+      listaDeItens: [],
+      itemSelecionado: null,
+    };
+  },
+  methods: {
+    abrirModal() {
+      this.mostrarModal = true; // Exibir o modal ao clicar no botão "adicionar"
+    },
+    fecharModal() {
+      this.mostrarModal = false; // Fechar o modal quando o evento 'fechar' for emitido
+    },
+  },
+};
+</script>

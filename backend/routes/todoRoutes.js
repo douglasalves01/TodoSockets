@@ -11,3 +11,7 @@ todoRouter.delete(
   checkToken,
   TodoController.removeTodoById
 );
+
+todoRouter.get("/todo/todo", checkToken, TodoController.getTodouserByTodo);
+todoRouter.get("/todo/doing", checkToken, TodoController.getTodouserByDoing);
+todoRouter.get("/todo/done", checkToken, TodoController.getTodouserByDone);
