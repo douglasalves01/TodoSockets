@@ -27,7 +27,7 @@ export class LisController {
       }
       idmember.push(memberExists.rows[0].id);
     }
-    const token = getToken(req);
+    const token = await getToken(req);
     const user = await getUserByToken(token);
     const sqllist =
       "insert into list(description,idmember,title,iduser) values($1,$2,$3,$4)";

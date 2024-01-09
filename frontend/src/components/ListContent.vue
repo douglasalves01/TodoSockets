@@ -7,7 +7,8 @@
     <div class="list-content">
       <div class="list-header">
         <h1>List</h1>
-        <button>adicionar</button>
+        <button @click="abrirModal()">adicionar</button>
+        <ModalList v-if="mostrarModal" @fechar="fecharModal" />
       </div>
       <div class="list-data">
         <p>title</p>
@@ -16,6 +17,27 @@
     </div>
   </div>
 </template>
+<script>
+import ModalList from "./ModalList.vue";
+export default {
+  components: {
+    ModalList,
+  },
+  data() {
+    return {
+      mostrarModal: false,
+    };
+  },
+  methods: {
+    abrirModal() {
+      this.mostrarModal = true; // Exibir o modal ao clicar no botão "adicionar"
+    },
+    fecharModal() {
+      this.mostrarModal = false; // Fechar o modal quando o evento 'fechar' for emitido
+    },
+  },
+};
+</script>
 <style scope>
 .container-list {
   width: 100%;
