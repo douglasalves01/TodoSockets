@@ -46,7 +46,7 @@ export class TodoController {
   }
   static async updateTodo(req, res) {
     const id = req.params.id;
-    const { title, description, status } = req.body;
+    const { status } = req.body;
 
     //verificar se existe o todo
     const sqlTodo = "select * from todo where id=$1";
@@ -74,9 +74,8 @@ export class TodoController {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-    const updateSql =
-      "update todo set title=$1, description=$2, status = $3 where id= $4";
-    const updateData = [title, description, status, id];
+    const updateSql = "update todo set status = $1 where id= $2";
+    const updateData = [status, id];
     try {
       await conn.query(updateSql, updateData);
       res.status(200).json({ message: "Nota atualizada com sucesso!" });
@@ -112,7 +111,8 @@ export class TodoController {
   static async getTodouserByTodo(req, res) {
     const token = await getToken(req);
     const user = await getUserByToken(token);
-    const sqllist = "select * from todo where iduser=$1 and status='to do'";
+    const sqllist =
+      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='todo'";
     const sqlData = [user.id];
 
     try {
@@ -125,7 +125,8 @@ export class TodoController {
   static async getTodouserByDoing(req, res) {
     const token = await getToken(req);
     const user = await getUserByToken(token);
-    const sqllist = "select * from todo where iduser=$1 and status='doing'";
+    const sqllist =
+      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='doing'";
     const sqlData = [user.id];
 
     try {
@@ -138,7 +139,8 @@ export class TodoController {
   static async getTodouserByDone(req, res) {
     const token = await getToken(req);
     const user = await getUserByToken(token);
-    const sqllist = "select * from todo where iduser=$1 and status='done'";
+    const sqllist =
+      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='done'";
     const sqlData = [user.id];
 
     try {
