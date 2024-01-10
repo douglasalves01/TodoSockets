@@ -112,7 +112,7 @@ export class TodoController {
   static async getTodouserByTodo(req, res) {
     const token = await getToken(req);
     const user = await getUserByToken(token);
-    const sqllist = "select * from list where iduser=$1 and ";
+    const sqllist = "select * from todo where iduser=$1 and status='to do'";
     const sqlData = [user.id];
 
     try {
@@ -122,6 +122,30 @@ export class TodoController {
       res.status(500).json({ message: error.message });
     }
   }
-  static async getTodouserByDoing(req, res) {}
-  static async getTodouserByDone(req, res) {}
+  static async getTodouserByDoing(req, res) {
+    const token = await getToken(req);
+    const user = await getUserByToken(token);
+    const sqllist = "select * from todo where iduser=$1 and status='doing'";
+    const sqlData = [user.id];
+
+    try {
+      const data = await conn.query(sqllist, sqlData);
+      res.status(200).json({ message: "Busca concluída", data: data.rows });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  static async getTodouserByDone(req, res) {
+    const token = await getToken(req);
+    const user = await getUserByToken(token);
+    const sqllist = "select * from todo where iduser=$1 and status='done'";
+    const sqlData = [user.id];
+
+    try {
+      const data = await conn.query(sqllist, sqlData);
+      res.status(200).json({ message: "Busca concluída", data: data.rows });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 }

@@ -8,9 +8,9 @@
         <HeaderContent />
       </div>
       <div class="section">
-        <CardTodo todoStatus="To do" />
-        <CardTodo todoStatus="Doing" />
-        <CardTodo todoStatus="Done" />
+        <CardTodo id="card" todoStatus="To do" />
+        <CardTodo id="card" todoStatus="Doing" />
+        <CardTodo id="card" todoStatus="Done" />
       </div>
     </main>
   </div>
@@ -22,9 +22,8 @@
   height: 100vh;
   display: flex;
 }
-aside {
+.aside {
   width: 25%;
-  border-right: 1px solid;
 }
 main {
   width: 75%;
@@ -40,6 +39,9 @@ main {
   width: 100%;
   height: 85%;
   display: flex;
+}
+#card {
+  margin-right: 1rem;
 }
 </style>
 

@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/router.js";
-
+import "primeicons/primeicons.css";
 router.beforeEach((to, from, next) => {
   // Verifica se a rota requer autenticação
   if (to.meta.requiresAuth) {
