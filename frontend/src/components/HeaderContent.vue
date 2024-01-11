@@ -1,10 +1,11 @@
 <template>
   <div class="container-header">
     <h1>Homework</h1>
+    <p>ID da Lista do Pai: {{ itemId }}</p>
     <div class="options">
       <button class="options-button">Deletar</button>
       <button class="options-button" @click="abrirModal()">+ Add To Do</button>
-      <ModalList v-if="mostrarModal" @fechar="fecharModal" />
+      <ModalTodo v-if="mostrarModal" @fechar="fecharModal" />
       <button class="options-button">+ Invite people</button>
     </div>
   </div>
@@ -28,10 +29,22 @@
 }
 </style>
 <script>
-import ModalList from "./ModalTodo.vue";
+import ModalTodo from "./ModalTodo.vue";
 export default {
+  props: {
+    itemId: {
+      type: String,
+      default: null,
+    },
+  },
+  watch: {
+    itemId(newValue, oldValue) {
+      // Faça algo quando o valor mudar
+      console.log(`Novo valor da propriedade itemId: ${newValue}`);
+    },
+  },
   components: {
-    ModalList,
+    ModalTodo,
   },
   data() {
     return {

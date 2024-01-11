@@ -84,6 +84,8 @@ export default {
       } else {
         this.itemSelecionado = item;
       }
+
+      this.$emit("pegarIdList", item.id);
     },
   },
   mounted() {
@@ -113,8 +115,7 @@ export default {
   border-radius: 5px;
   border: none;
 }
-.config-content button > i {
-}
+
 .list-content {
   width: 80%;
   height: 100%;

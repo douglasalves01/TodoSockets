@@ -1,11 +1,11 @@
 <template>
   <div class="container-dashboard">
     <aside class="aside">
-      <ListContent />
+      <ListContent @pegarIdList="lidarComSelecaoDeItem" />
     </aside>
     <main>
       <div class="header">
-        <HeaderContent />
+        <HeaderContent :itemId="itemId" />
       </div>
       <div class="section">
         <CardTodo id="card" todoStatus="To do" />
@@ -50,10 +50,21 @@ import ListContent from "../components/ListContent.vue";
 import HeaderContent from "../components/HeaderContent.vue";
 import CardTodo from "../components/CardTodo.vue";
 export default {
+  data() {
+    return {
+      itemId: null,
+    };
+  },
   components: {
     ListContent,
     HeaderContent,
     CardTodo,
+  },
+  methods: {
+    lidarComSelecaoDeItem(itemId) {
+      console.log(`Item selecionado com ID: ${itemId}`);
+      this.itemId = itemId;
+    },
   },
 };
 </script>
