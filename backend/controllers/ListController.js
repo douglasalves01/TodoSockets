@@ -52,4 +52,21 @@ export class LisController {
       res.status(500).json({ message: error.message });
     }
   }
+  static async removeList(req, res) {
+    const id = req.params.id;
+
+    //verificar se a todo a ser removida foi tem o iduser do usuario logado
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    const deleteTodoFromList = "delete from todo where idlist=$1 and iduser=$2";
+    const deleteList = "delete from list where id=$1 and iduser=$2";
+    try {
+      await conn.query(deleteTodoFromList, [id, user.id]);
+      await conn.query(deleteList, [id, user.id]);
+      res.status(200).json({ message: "Lista deletada com sucesso!" });
+    } catch (error) {
+      res.status(422).json({ message: error.message });
+    }
+  }
 }

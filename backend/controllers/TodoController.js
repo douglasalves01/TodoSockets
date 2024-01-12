@@ -109,7 +109,9 @@ export class TodoController {
     }
   }
   static async getTodoUserByTodoStatus(req, res) {
-    const { idList, status } = req.body;
+    let { idList, status } = req.query;
+
+    status = status.toLowerCase();
     const token = await getToken(req);
     const user = await getUserByToken(token);
     const sqllist =
