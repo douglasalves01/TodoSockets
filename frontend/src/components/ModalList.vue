@@ -129,6 +129,8 @@ export default {
       this.$emit("fechar"); // Emitir evento para fechar o modal
     },
     handleSubmitForm() {
+      this.errorMessages = [];
+      this.successMessage = "";
       const token = localStorage.getItem("token");
 
       // Configurar o token no cabeçalho 'Authorization'
@@ -141,10 +143,18 @@ export default {
             const message = response.data.message;
             console.log(message);
           }
+          this.fecharModal();
         })
         .catch((error) => {
-          const message = error.response.data.message;
-          console.log(message);
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            this.errorMessages = [error.response.data.message];
+          } else {
+            this.errorMessages = ["Erro desconhecido ao tentar fazer login."];
+          }
         });
     },
   },

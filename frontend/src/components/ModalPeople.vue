@@ -133,6 +133,7 @@ export default {
             const message = response.data.message;
             console.log(message);
           }
+          this.fecharModalPeople();
         })
         .catch((error) => {
           const message = error.response.data.message;

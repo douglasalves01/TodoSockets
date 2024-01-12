@@ -81,6 +81,7 @@ export default {
             const message = response.data.message;
             console.log(message);
           }
+          this.fecharModal();
         })
         .catch((error) => {
           const message = error.response.data.message;

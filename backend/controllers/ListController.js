@@ -42,7 +42,8 @@ export class LisController {
   static async getAllByUser(req, res) {
     const token = await getToken(req);
     const user = await getUserByToken(token);
-    const sqllist = "select * from list where iduser=$1";
+    const sqllist =
+      "SELECT * FROM list WHERE iduser = $1 OR $1 = ANY(idmember);";
     const sqlData = [user.id];
 
     try {

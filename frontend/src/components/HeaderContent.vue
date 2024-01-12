@@ -1,7 +1,7 @@
 <template>
   <div class="container-header">
     <h1>Homework</h1>
-    <p>ID da Lista do Pai: {{ itemId }}</p>
+
     <div class="options">
       <button class="delete-button" @click="deletarLista(itemId)">
         <i class="pi pi-trash" style="font-size: 1.5rem"></i>

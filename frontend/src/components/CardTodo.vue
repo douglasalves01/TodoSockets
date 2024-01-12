@@ -2,10 +2,14 @@
   <div class="container-card">
     <div class="card-header">
       <h3>{{ todoStatus }}</h3>
-      <p>ID da Lista do Pai: {{ itemId }}</p>
     </div>
-    <div class="card-todos">
-      <div class="todo" v-for="item in listaTodo" :key="item.id">
+    <div class="card-todos" :style="{ borderColor: borderColor }">
+      <div
+        class="todo"
+        v-for="item in listaTodo"
+        :key="item.id"
+        :style="{ borderColor: borderColor }"
+      >
         <div class="todo-text">
           <h4>
             <i
@@ -65,6 +69,10 @@ export default {
     itemId: {
       type: String,
       default: null,
+    },
+    borderColor: {
+      type: String,
+      default: "#000",
     },
   },
   methods: {
@@ -171,7 +179,7 @@ export default {
   border-bottom: 4px solid #332e1d;
 }
 .todo {
-  width: 320px;
+  width: 300px;
   height: 85px;
   background-color: #f66c0e0f;
   display: flex;

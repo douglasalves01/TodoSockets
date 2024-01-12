@@ -6,15 +6,15 @@
     <div class="content-form">
       <h2>Create Account</h2>
       <form v-on:submit.prevent="handleSubmitForm()" action="" method="post">
-        <div class="form-group">
+        <fieldset>
           <label for="name">Name</label>
           <input type="name" name="name" id="name" v-model="dados.name" />
-        </div>
-        <div class="form-group">
+        </fieldset>
+        <fieldset>
           <label for="email">Email</label>
           <input type="email" name="email" id="email" v-model="dados.email" />
-        </div>
-        <div class="form-group">
+        </fieldset>
+        <fieldset>
           <label for="password">Senha</label>
           <input
             type="password"
@@ -22,8 +22,8 @@
             id="password"
             v-model="dados.password"
           />
-        </div>
-        <div class="form-group">
+        </fieldset>
+        <fieldset>
           <label for="confirmPassword">Confirmação de senha</label>
           <input
             type="password"
@@ -31,18 +31,30 @@
             id="confirmPassword"
             v-model="dados.confirmPassword"
           />
-        </div>
+        </fieldset>
         <input type="submit" value="Criar conta" />
       </form>
       <p>
         Já tem uma conta?
         <router-link to="/login">Clique aqui!</router-link>
       </p>
+      <div v-if="successMessage" class="message success">
+        <i class="pi pi-check" style="font-size: 2rem"></i>
+        {{ successMessage }}
+      </div>
+      <div v-if="errorMessages.length > 0" class="message error">
+        <p v-for="message in errorMessages" :key="message">
+          <i class="pi pi-exclamation-triangle" style="font-size: 1.5rem"></i>
+          {{ message }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import "./SignIn.vue";
+
 import ImageSection from "../components/ImageSection.vue";
 import axios from "axios";
 import router from "../router/router.js";
@@ -55,10 +67,13 @@ export default {
         password: "",
         confirmPassword: "",
       },
+      successMessage: "",
+      errorMessages: [],
     };
   },
   methods: {
     handleSubmitForm() {
+      this.errorMessages = [];
       axios
         .post("http://localhost:5000/users/register", this.dados)
         .then((response) => {
@@ -71,15 +86,22 @@ export default {
           }
         })
         .catch((error) => {
-          const message = error.response.data.message;
-          console.log(message);
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            this.errorMessages = [error.response.data.message];
+          } else {
+            this.errorMessages = ["Erro desconhecido ao tentar fazer login."];
+          }
         });
     },
   },
   components: { ImageSection },
 };
 </script>
-
+<!-- 
 <style lang="css" scoped>
 .container {
   width: 100vw;
@@ -116,4 +138,4 @@ form {
   width: 100%;
   margin-bottom: 1rem;
 }
-</style>
+</style> -->

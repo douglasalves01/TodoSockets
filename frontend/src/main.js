@@ -11,6 +11,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
     // Se não houver um token, redireciona para a página de login
+
     next({ name: "Login" });
   }
   // Para rotas que não requerem autenticação, permite o acesso diretamente

@@ -115,11 +115,12 @@ export class TodoController {
     const token = await getToken(req);
     const user = await getUserByToken(token);
     const sqllist =
-      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status=$2 and t.idlist=$3";
+      "SELECT t.id, t.title, t.description, t.status, u.name FROM todo t JOIN users u ON u.id = t.iduser JOIN list l ON t.idlist = l.id WHERE (t.iduser = $1 OR $1 = ANY(l.idmember)) AND t.status = $2 AND t.idlist = $3;";
     const sqlData = [user.id, status, idList];
 
     try {
       const data = await conn.query(sqllist, sqlData);
+
       res.status(200).json({ message: "Busca concluída", data: data.rows });
     } catch (error) {
       res.status(500).json({ message: error.message });
