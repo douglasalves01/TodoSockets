@@ -69,4 +69,24 @@ export class LisController {
       res.status(422).json({ message: error.message });
     }
   }
+  static async updateListMember(req, res) {
+    const id = req.body.idList;
+    const member = req.body.member;
+    const retornoIdMember = "select id from users where email=$1";
+    const memberData = [member];
+    const idmember = await conn.query(retornoIdMember, memberData);
+    if (idmember.rows.length === 0) {
+      res.status(422).json({ message: "Membro não encontrado!" });
+      return;
+    }
+    const updateSql =
+      "UPDATE list SET idmember = array_append(idmember, $1) WHERE id = $2";
+    try {
+      const updateData = [idmember.rows[0].id, id];
+      await conn.query(updateSql, updateData);
+      res.status(200).json({ message: "Membro adicionado com sucesso!" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 }

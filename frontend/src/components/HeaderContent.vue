@@ -8,7 +8,14 @@
       </button>
       <button class="options-button" @click="abrirModal()">+ Add To Do</button>
       <ModalTodo :itemId="itemId" v-if="mostrarModal" @fechar="fecharModal" />
-      <button class="options-button">+ Invite people</button>
+      <button class="options-button" @click="abrirModalPeople()">
+        + Invite people
+      </button>
+      <ModalPeople
+        :itemId="itemId"
+        v-if="mostrarModalPeople"
+        @fecharPeople="fecharModalPeople"
+      />
     </div>
   </div>
 </template>
@@ -49,6 +56,7 @@
 <script>
 import axios from "axios";
 import ModalTodo from "./ModalTodo.vue";
+import ModalPeople from "./ModalPeople.vue";
 export default {
   props: {
     itemId: {
@@ -58,10 +66,12 @@ export default {
   },
   components: {
     ModalTodo,
+    ModalPeople,
   },
   data() {
     return {
       mostrarModal: false,
+      mostrarModalPeople: false,
       listaDeItens: [],
       itemSelecionado: null,
     };
@@ -90,6 +100,12 @@ export default {
     },
     fecharModal() {
       this.mostrarModal = false; // Fechar o modal quando o evento 'fechar' for emitido
+    },
+    abrirModalPeople() {
+      this.mostrarModalPeople = true;
+    },
+    fecharModalPeople() {
+      this.mostrarModalPeople = false;
     },
   },
 };
