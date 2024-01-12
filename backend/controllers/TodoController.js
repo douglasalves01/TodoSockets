@@ -4,7 +4,7 @@ import { getUserByToken } from "../helpers/get-user-by-token.js";
 
 export class TodoController {
   static async create(req, res) {
-    const { title, description, member, status } = req.body;
+    const { title, description, member, status, idList } = req.body;
     let idMember = [];
 
     if (!title) {
@@ -35,8 +35,8 @@ export class TodoController {
     const token = await getToken(req);
     const user = await getUserByToken(token);
 
-    const todoSql = `INSERT INTO todo (title, description, status, idUser,idMember) VALUES ($1, $2, $3, $4, $5)`;
-    const todoData = [title, description, status, user.id, idMember];
+    const todoSql = `INSERT INTO todo (title, description, status, idUser,idMember, idlist) VALUES ($1, $2, $3, $4, $5,$6)`;
+    const todoData = [title, description, status, user.id, idMember, idList];
     try {
       await conn.query(todoSql, todoData);
       res.status(200).json({ message: "Notas cadastrada com sucesso!" });
@@ -108,40 +108,13 @@ export class TodoController {
       res.status(422).json({ message: error.message });
     }
   }
-  static async getTodouserByTodo(req, res) {
+  static async getTodoUserByTodoStatus(req, res) {
+    const { idList, status } = req.body;
     const token = await getToken(req);
     const user = await getUserByToken(token);
     const sqllist =
-      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='todo'";
-    const sqlData = [user.id];
-
-    try {
-      const data = await conn.query(sqllist, sqlData);
-      res.status(200).json({ message: "Busca concluída", data: data.rows });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-  static async getTodouserByDoing(req, res) {
-    const token = await getToken(req);
-    const user = await getUserByToken(token);
-    const sqllist =
-      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='doing'";
-    const sqlData = [user.id];
-
-    try {
-      const data = await conn.query(sqllist, sqlData);
-      res.status(200).json({ message: "Busca concluída", data: data.rows });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-  static async getTodouserByDone(req, res) {
-    const token = await getToken(req);
-    const user = await getUserByToken(token);
-    const sqllist =
-      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status='done'";
-    const sqlData = [user.id];
+      "select t.id,t.title,t.description,t.status,u.name from todo t, users u where t.iduser=$1 and u.id=t.iduser and t.status=$2 and t.idlist=$3";
+    const sqlData = [user.id, status, idList];
 
     try {
       const data = await conn.query(sqllist, sqlData);
