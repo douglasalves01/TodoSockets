@@ -58,12 +58,6 @@ export default {
       default: null,
     },
   },
-  watch: {
-    itemId(newValue, oldValue) {
-      // Faça algo quando o valor mudar
-      //console.log(`Novo valor da propriedade itemId: ${newValue}`);
-    },
-  },
   data() {
     return {
       dados: {

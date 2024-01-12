@@ -3,8 +3,8 @@
     <h1>Homework</h1>
     <p>ID da Lista do Pai: {{ itemId }}</p>
     <div class="options">
-      <button class="options-button" @click="deletarLista(itemId)">
-        Deletar
+      <button class="delete-button" @click="deletarLista(itemId)">
+        <i class="pi pi-trash" style="font-size: 1.5rem"></i>
       </button>
       <button class="options-button" @click="abrirModal()">+ Add To Do</button>
       <ModalTodo :itemId="itemId" v-if="mostrarModal" @fechar="fecharModal" />
@@ -16,6 +16,10 @@
 .container-header {
   display: flex;
   justify-content: space-between;
+}
+.options {
+  display: flex;
+  align-items: center;
 }
 .options-button {
   padding: 0.5rem 2rem;
@@ -29,6 +33,18 @@
   background-color: #5ac7aa;
   opacity: 0.8;
 }
+.delete-button {
+  padding: 0.5rem 0.8rem;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #0000009a;
+  color: #000000;
+  margin-right: 1.5rem;
+}
+.delete-button:active {
+  background-color: #ffffff88;
+  opacity: 0.8;
+}
 </style>
 <script>
 import axios from "axios";
@@ -38,11 +54,6 @@ export default {
     itemId: {
       type: String,
       default: null,
-    },
-  },
-  watch: {
-    itemId(newValue, oldValue) {
-      // Faça algo quando o valor mudar
     },
   },
   components: {

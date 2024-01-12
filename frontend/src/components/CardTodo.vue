@@ -35,6 +35,9 @@
             {{ item.name }}
           </p>
         </div>
+        <div class="delete-todo">
+          <button @click="deleteTodo(item)">X</button>
+        </div>
       </div>
     </div>
   </div>
@@ -108,6 +111,26 @@ export default {
           console.log(message);
         });
     },
+    deleteTodo(item) {
+      const token = localStorage.getItem("token");
+
+      // Configurar o token no cabeçalho 'Authorization'
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios
+        .delete(`http://localhost:5000/todo/delete/${item.id}`, {
+          status: item.status,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            const message = response.data.message;
+            console.log(message);
+          }
+        })
+        .catch((error) => {
+          const message = error.response.data.message;
+          console.log(message);
+        });
+    },
   },
   watch: {
     itemId: function (newItemId, oldItemId) {
@@ -148,10 +171,12 @@ export default {
   border-bottom: 4px solid #332e1d;
 }
 .todo {
+  width: 320px;
+  height: 85px;
   background-color: #f66c0e0f;
   display: flex;
   justify-content: space-between;
-  padding: 0.8rem;
+  padding: 1rem;
   margin-bottom: 10px;
   border: 2px dashed #000;
 }
@@ -162,6 +187,19 @@ export default {
   background-color: #f66c0e0f;
   border: 1px solid #ced2d9;
   padding: 0.1rem 0.5rem;
+}
+.delete-todo {
+  margin-right: -12px;
+  margin-top: -15px;
+}
+.delete-todo > button {
+  background-color: #f66c0e0f;
+  border: none;
+  cursor: pointer;
+}
+.delete-todo > button:active {
+  color: #00000083;
+  border: none;
 }
 .todo-text {
   margin-right: 20px;

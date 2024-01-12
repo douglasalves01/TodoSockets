@@ -56,10 +56,10 @@ export default {
   },
   methods: {
     abrirModal() {
-      this.mostrarModal = true; // Exibir o modal ao clicar no botão "adicionar"
+      this.mostrarModal = true;
     },
     fecharModal() {
-      this.mostrarModal = false; // Fechar o modal quando o evento 'fechar' for emitido
+      this.mostrarModal = false;
     },
     buscarListas() {
       const token = localStorage.getItem("token");
