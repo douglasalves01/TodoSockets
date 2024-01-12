@@ -52,6 +52,18 @@
 import axios from "axios";
 
 export default {
+  props: {
+    itemId: {
+      type: String,
+      default: null,
+    },
+  },
+  watch: {
+    itemId(newValue, oldValue) {
+      // Faça algo quando o valor mudar
+      //console.log(`Novo valor da propriedade itemId: ${newValue}`);
+    },
+  },
   data() {
     return {
       dados: {
@@ -59,13 +71,13 @@ export default {
         status: "",
         description: "",
         member: "",
+        idList: this.itemId,
       },
     };
   },
   methods: {
     handleSubmitForm() {
       const token = localStorage.getItem("token");
-
       // Configurar o token no cabeçalho 'Authorization'
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios

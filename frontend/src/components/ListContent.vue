@@ -71,6 +71,9 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.listaDeItens = response.data.data;
+            if (this.listaDeItens.length > 0) {
+              this.selecionarItem(this.listaDeItens[0]);
+            }
           }
         })
         .catch((error) => {
@@ -79,11 +82,7 @@ export default {
         });
     },
     selecionarItem(item) {
-      if (this.itemSelecionado === item) {
-        this.itemSelecionado = null;
-      } else {
-        this.itemSelecionado = item;
-      }
+      this.itemSelecionado = item;
 
       this.$emit("pegarIdList", item.id);
     },

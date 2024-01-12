@@ -8,9 +8,9 @@
         <HeaderContent :itemId="itemId" />
       </div>
       <div class="section">
-        <CardTodo id="card" todoStatus="To do" />
-        <CardTodo id="card" todoStatus="Doing" />
-        <CardTodo id="card" todoStatus="Done" />
+        <CardTodo :itemId="itemId" id="card" todoStatus="To do" />
+        <CardTodo :itemId="itemId" id="card" todoStatus="Doing" />
+        <CardTodo :itemId="itemId" id="card" todoStatus="Done" />
       </div>
     </main>
   </div>
@@ -62,7 +62,6 @@ export default {
   },
   methods: {
     lidarComSelecaoDeItem(itemId) {
-      console.log(`Item selecionado com ID: ${itemId}`);
       this.itemId = itemId;
     },
   },

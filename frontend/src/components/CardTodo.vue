@@ -2,6 +2,7 @@
   <div class="container-card">
     <div class="card-header">
       <h3>{{ todoStatus }}</h3>
+      <p>ID da Lista do Pai: {{ itemId }}</p>
     </div>
     <div class="card-todos">
       <div class="todo" v-for="item in listaTodo" :key="item.id">
@@ -22,7 +23,7 @@
             v-on:change="updateStatus(item)"
             v-model="item.status"
           >
-            <option value="todo">To do</option>
+            <option value="to do">To do</option>
             <option value="doing">Doing</option>
             <option value="done">Done</option>
           </select>
@@ -46,6 +47,10 @@ export default {
   data() {
     return {
       listaTodo: [],
+      dados: {
+        idList: this.itemId,
+        status: this.todoStatus,
+      },
     };
   },
   props: {
@@ -53,15 +58,26 @@ export default {
       type: String,
       required: true,
     },
+    //id da todo
+    itemId: {
+      type: String,
+      default: null,
+    },
   },
   methods: {
-    buscarStatusTodo(status) {
+    buscarStatusTodo() {
       const token = localStorage.getItem("token");
 
       // Configurar o token no cabeçalho 'Authorization'
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       axios
-        .get(`http://localhost:5000/todo/${status}`)
+        .get(`http://localhost:5000/todo/status`, {
+          params: {
+            idList: this.itemId,
+            status: this.todoStatus,
+          },
+        })
         .then((response) => {
           if (response.status === 200) {
             this.listaTodo = response.data.data;
@@ -93,6 +109,14 @@ export default {
         });
     },
   },
+  watch: {
+    itemId: function (newItemId, oldItemId) {
+      if (newItemId !== oldItemId) {
+        this.dados.idList = newItemId;
+        this.buscarStatusTodo();
+      }
+    },
+  },
   mounted() {
     let status = "";
     if (this.todoStatus === "To do") {
@@ -103,7 +127,6 @@ export default {
       status = "done";
     }
 
-    // Chamando a função buscarStatusTodo com a URL específica
     this.buscarStatusTodo(status);
   },
 };
