@@ -1,7 +1,7 @@
 <template>
   <div class="modal">
     <div class="modal-content">
-      <div class="header-content">
+      <div class="header-content-todo">
         <h2>To Do</h2>
         <button id="modal-button" @click="fecharModal">
           <i
@@ -114,12 +114,12 @@ export default {
   height: 450px;
   border-radius: 4px;
 }
-.header-content {
+.header-content-todo {
   padding: 0.8rem 0.8rem;
   display: flex;
   justify-content: space-between;
 }
-.header-content h2 {
+.header-content-todo h2 {
   font-size: 2rem;
   color: #242731;
 }

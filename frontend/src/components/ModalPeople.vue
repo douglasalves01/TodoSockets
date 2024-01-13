@@ -1,7 +1,7 @@
 <template>
   <div class="modal-people">
     <div class="modal-content-people">
-      <div class="header-content">
+      <div class="header-content-people">
         <h2>Invite People</h2>
         <button id="modal-button" @click="fecharModalPeople">
           <i
@@ -42,12 +42,12 @@
   height: 250px;
   border-radius: 4px;
 }
-.header-content {
+.header-content-people {
   padding: 0.8rem 0.8rem;
   display: flex;
   justify-content: space-between;
 }
-.header-content h2 {
+.header-content-people h2 {
   font-size: 2rem;
   color: #242731;
 }

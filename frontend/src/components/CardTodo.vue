@@ -50,6 +50,8 @@
 <script>
 import axios from "axios";
 
+import { pusher } from "../main.js";
+
 export default {
   data() {
     return {
@@ -139,6 +141,14 @@ export default {
           console.log(message);
         });
     },
+    ouvirPusher() {
+      const channel = pusher.subscribe("my-channel");
+      channel.bind("todo", (data) => {
+        console.log("Aviso recebido:", data.message);
+
+        this.buscarStatusTodo();
+      });
+    },
   },
   watch: {
     itemId: function (newItemId, oldItemId) {
@@ -157,8 +167,8 @@ export default {
     } else if (this.todoStatus === "Done") {
       status = "done";
     }
-
-    this.buscarStatusTodo(status);
+    this.ouvirPusher();
+    this.buscarStatusTodo();
   },
 };
 </script>
@@ -211,6 +221,7 @@ export default {
 }
 .todo-text {
   margin-right: 20px;
+  width: 150px;
 }
 .todo-text h4 {
   margin-bottom: 10px;

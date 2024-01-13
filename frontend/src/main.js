@@ -2,6 +2,9 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/router.js";
 import "primeicons/primeicons.css";
+import Pusher from "pusher-js";
+const app = createApp(App);
+
 router.beforeEach((to, from, next) => {
   // Verifica se a rota requer autenticação
   if (to.meta.requiresAuth) {
@@ -17,5 +20,15 @@ router.beforeEach((to, from, next) => {
   // Para rotas que não requerem autenticação, permite o acesso diretamente
   next();
 });
+Pusher.logToConsole = true;
 
-createApp(App).use(router).mount("#app");
+export const pusher = new Pusher(import.meta.env.VITE_KEY_PUSHER, {
+  cluster: import.meta.env.VITE_CLUSTER_PUSHER,
+});
+
+const channel = pusher.subscribe("my-channel");
+channel.bind("my-event", function (data) {
+  app.messages.push(JSON.stringify(data));
+});
+
+app.use(router).mount("#app");

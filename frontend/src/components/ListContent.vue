@@ -43,6 +43,7 @@
 <script>
 import axios from "axios";
 import ModalList from "./ModalList.vue";
+import { pusher } from "../main.js";
 export default {
   components: {
     ModalList,
@@ -81,6 +82,14 @@ export default {
           console.log(message);
         });
     },
+    ouvirPusher() {
+      const channel = pusher.subscribe("my-channel");
+      channel.bind("list", (data) => {
+        console.log("Aviso recebido:", data.message);
+
+        this.buscarListas();
+      });
+    },
     selecionarItem(item) {
       this.itemSelecionado = item;
 
@@ -89,6 +98,7 @@ export default {
   },
   mounted() {
     this.buscarListas();
+    this.ouvirPusher();
   },
 };
 </script>
