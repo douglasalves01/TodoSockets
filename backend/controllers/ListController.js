@@ -1,6 +1,7 @@
 import { getToken } from "../helpers/get-token.js";
 import { getUserByToken } from "../helpers/get-user-by-token.js";
 import { conn } from "../db/conn.js";
+import { pusher } from "../app.js";
 
 export class LisController {
   static async create(req, res) {
@@ -34,6 +35,9 @@ export class LisController {
     const sqlData = [description, idmember, title, user.id];
     try {
       await conn.query(sqllist, sqlData);
+      pusher.trigger("my-channel", "list", {
+        message: "nova lista!",
+      });
       res.status(200).json({ message: "Lista cadastrada com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -65,6 +69,9 @@ export class LisController {
     try {
       await conn.query(deleteTodoFromList, [id, user.id]);
       await conn.query(deleteList, [id, user.id]);
+      pusher.trigger("my-channel", "list", {
+        message: "Lista excluida!",
+      });
       res.status(200).json({ message: "Lista deletada com sucesso!" });
     } catch (error) {
       res.status(422).json({ message: error.message });

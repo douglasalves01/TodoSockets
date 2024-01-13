@@ -1,6 +1,7 @@
 import { conn } from "../db/conn.js";
 import { getToken } from "../helpers/get-token.js";
 import { getUserByToken } from "../helpers/get-user-by-token.js";
+import { pusher } from "../app.js";
 
 export class TodoController {
   static async create(req, res) {
@@ -39,6 +40,9 @@ export class TodoController {
     const todoData = [title, description, status, user.id, idMember, idList];
     try {
       await conn.query(todoSql, todoData);
+      pusher.trigger("my-channel", "todo", {
+        message: "Nova nota criada!",
+      });
       res.status(200).json({ message: "Notas cadastrada com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -78,6 +82,9 @@ export class TodoController {
     const updateData = [status, id];
     try {
       await conn.query(updateSql, updateData);
+      pusher.trigger("my-channel", "todo", {
+        message: "Nova nota criada!",
+      });
       res.status(200).json({ message: "Nota atualizada com sucesso!" });
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -103,6 +110,9 @@ export class TodoController {
     const deleteSql = "delete from todo where id=$1";
     try {
       await conn.query(deleteSql, [id]);
+      pusher.trigger("my-channel", "todo", {
+        message: "Nova nota criada!",
+      });
       res.status(200).json({ message: "Nota deletada com sucesso!" });
     } catch (error) {
       res.status(422).json({ message: error.message });
@@ -115,8 +125,8 @@ export class TodoController {
     const token = await getToken(req);
     const user = await getUserByToken(token);
     const sqllist =
-      "SELECT t.id, t.title, t.description, t.status, u.name FROM todo t JOIN users u ON u.id = t.iduser JOIN list l ON t.idlist = l.id WHERE (t.iduser = $1 OR $1 = ANY(l.idmember)) AND t.status = $2 AND t.idlist = $3;";
-    const sqlData = [user.id, status, idList];
+      "SELECT t.id,t.title, t.description, t.status, (SELECT u.name FROM users u WHERE u.id = t.iduser) AS name FROM todo t WHERE t.idlist =$1 and t.status=$2;";
+    const sqlData = [idList, status];
 
     try {
       const data = await conn.query(sqllist, sqlData);
